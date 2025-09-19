@@ -87,11 +87,12 @@ src/
 - Main content area with responsive design
 - Configuration-driven layout constants
 
-## Installation & Setup
+## Getting Started
 
-1. **Navigate to project directory:**
+1. **Clone the repository:**
    ```bash
-   cd /Users/ram.ahuja/Desktop/dashboard
+   git clone https://github.com/RamAhuja24/dashboard.git
+   cd dashboard
    ```
 
 2. **Install dependencies:**
@@ -104,10 +105,8 @@ src/
    npm run dev
    ```
 
-4. **Open browser:**
-   ```
-   http://localhost:5173
-   ```
+4. **View the application:**
+   Open your browser and visit `http://localhost:5173`
 
 ## Usage
 
