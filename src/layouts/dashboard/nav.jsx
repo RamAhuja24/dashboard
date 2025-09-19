@@ -113,6 +113,12 @@ export default function Nav({ openNav, onCloseNav }) {
         height: 1,
         display: 'flex',
         flexDirection: 'column',
+        overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          display: 'none',
+        },
+        '-ms-overflow-style': 'none',
+        'scrollbar-width': 'none',
       }}
     >
       {renderAccount}
@@ -141,10 +147,10 @@ export default function Nav({ openNav, onCloseNav }) {
         PaperProps={{
           sx: {
             width: NAV.W_VERTICAL,
-            bgcolor: 'background.paper',
+            bgcolor: 'background.card',
             borderRight: '1px solid',
-            borderColor: 'divider',
-            boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+            borderColor: alpha(theme.palette.grey[300], 0.5),
+            boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none',
           },
         }}
       >

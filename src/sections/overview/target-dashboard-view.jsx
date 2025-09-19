@@ -19,36 +19,33 @@ import { alpha, useTheme } from '@mui/material/styles';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import Chart, { useChart } from 'src/components/chart';
+import WorldMapSvg from 'src/assets/world-map.svg';
 
-// Exact metric data from the target image - now with theme-aware colors
-const getMetricsData = (theme) => [
+// Exact metric data from the target image
+const getMetricsData = () => [
   {
     title: 'Customers',
     value: '3,781',
     change: '+11.01%',
     isPositive: true,
-    bgColor: theme.palette.mode === 'dark' ? alpha(theme.palette.primary.main, 0.15) : '#E3F2FD',
   },
   {
     title: 'Orders',
     value: '1,219',
     change: '-0.03%',
     isPositive: false,
-    bgColor: theme.palette.mode === 'dark' ? alpha(theme.palette.secondary.main, 0.15) : '#F3E5F5',
   },
   {
     title: 'Revenue',
     value: '$695',
     change: '+15.03%',
     isPositive: true,
-    bgColor: theme.palette.mode === 'dark' ? alpha(theme.palette.success.main, 0.15) : '#F1F8E9',
   },
   {
     title: 'Growth',
     value: '30.1%',
     change: '+6.08%',
     isPositive: true,
-    bgColor: theme.palette.mode === 'dark' ? alpha(theme.palette.info.main, 0.15) : '#E8F5E8',
   },
 ];
 
@@ -79,7 +76,7 @@ const topProducts = [
   { name: 'Marco Shoes', price: '$79.49', quantity: 64, amount: '$1,965.81' },
 ];
 
-function MetricCard({ title, value, change, isPositive, bgColor }) {
+function MetricCard({ title, value, change, isPositive }) {
   const theme = useTheme();
 
   return (
@@ -95,7 +92,7 @@ function MetricCard({ title, value, change, isPositive, bgColor }) {
         minWidth: { xs: 'auto', sm: 180, md: 200 },
         height: '100%',
         minHeight: { xs: 70, sm: 85, md: 95 },
-        backgroundColor: bgColor,
+        backgroundColor: theme.palette.background.card,
         borderRadius: '16px',
         border: 'none',
         boxShadow: 'none',
@@ -232,65 +229,121 @@ function WorldMapWidget() {
   const theme = useTheme();
   const locationData = getLocationData(theme);
 
+  // Geographical coordinates converted to SVG positions for 1000x500 viewBox
+  const locationCoordinates = {
+    'New York': { x: 240, y: 140 },      // ~40.7°N, 74.0°W
+    'San Francisco': { x: 120, y: 160 }, // ~37.8°N, 122.4°W
+    'Sydney': { x: 760, y: 380 },        // ~33.9°S, 151.2°E
+    'Singapore': { x: 700, y: 260 },     // ~1.3°N, 103.8°E
+  };
+
   return (
-    <Card sx={{
+    <Box sx={{
+      bgcolor: theme.palette.background.card,
+      borderRadius: 3,
+      p: 3,
       height: '100%',
-      borderRadius: 2,
-      border: '1px solid',
-      borderColor: alpha(theme.palette.grey[300], 0.5),
       display: 'flex',
-      flexDirection: 'column'
+      flexDirection: 'column',
+      border: theme.palette.mode === 'dark' ? `1px solid ${alpha(theme.palette.grey[700], 0.3)}` : 'none',
+      boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'
     }}>
-      <CardHeader
-        title="Revenue by Location"
-        titleTypographyProps={{
-          variant: 'h6',
+      {/* Title */}
+      <Typography
+        variant="h6"
+        sx={{
           fontWeight: 600,
-          fontSize: '1.125rem'
+          fontSize: '1rem',
+          color: theme.palette.text.primary,
+          mb: 3
         }}
-        sx={{ pb: 2 }}
-      />
-      <CardContent sx={{ pt: 0, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
-        <Box
-          sx={{
-            position: 'relative',
-            height: { xs: 120, sm: 140, md: 160 },
-            mb: 2,
-            bgcolor: alpha(theme.palette.grey[500], 0.08),
-            borderRadius: 2,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
+      >
+        Revenue by Location
+      </Typography>
+
+      {/* World Map */}
+      <Box
+        sx={{
+          position: 'relative',
+          height: { xs: 62, sm: 72, md: 82 },
+          mb: 2,
+          bgcolor: alpha(theme.palette.grey[500], 0.08),
+          borderRadius: 2,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          overflow: 'hidden'
+        }}
+      >
+        <img
+          src={WorldMapSvg}
+          alt="World Map"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            opacity: theme.palette.mode === 'light' ? 0.7 : 0.5
           }}
-        >
-          <Typography variant="body2" color="text.disabled" sx={{ fontSize: '0.875rem' }}>
-            🗺️ World Map
-          </Typography>
+        />
+      </Box>
 
-          {/* Location dots */}
-          <Box sx={{ position: 'absolute', top: '25%', left: '20%', width: 8, height: 8, bgcolor: theme.palette.success.main, borderRadius: '50%' }} />
-          <Box sx={{ position: 'absolute', top: '30%', left: '10%', width: 8, height: 8, bgcolor: theme.palette.warning.main, borderRadius: '50%' }} />
-          <Box sx={{ position: 'absolute', top: '70%', left: '75%', width: 8, height: 8, bgcolor: theme.palette.error.main, borderRadius: '50%' }} />
-          <Box sx={{ position: 'absolute', top: '40%', left: '70%', width: 8, height: 8, bgcolor: theme.palette.info.main, borderRadius: '50%' }} />
-        </Box>
-
-        <Stack spacing={1.5} sx={{ flexGrow: 1 }}>
-          {locationData.map((location) => (
-            <Stack key={location.name} direction="row" justifyContent="space-between" alignItems="center">
+      {/* Location List */}
+      <Stack spacing={2} sx={{ flexGrow: 1 }}>
+        {locationData.map((location) => (
+          <Box key={location.name}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
               <Stack direction="row" alignItems="center" spacing={1.5}>
-                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: location.color }} />
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', color: 'text.primary' }}>
+                <Box sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: '#1a1a1a'
+                }} />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: '0.875rem',
+                    color: theme.palette.text.primary,
+                    fontWeight: 500
+                  }}
+                >
                   {location.name}
                 </Typography>
               </Stack>
-              <Typography variant="body2" sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'text.primary' }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: theme.palette.text.primary
+                }}
+              >
                 {location.value}K
               </Typography>
             </Stack>
-          ))}
-        </Stack>
-      </CardContent>
-    </Card>
+            {/* Progress bar */}
+            <Box
+              sx={{
+                ml: 3,
+                height: 4,
+                bgcolor: alpha(theme.palette.grey[300], 0.3),
+                borderRadius: 2,
+                overflow: 'hidden'
+              }}
+            >
+              <Box
+                sx={{
+                  height: '100%',
+                  width: `${(location.value / 72) * 100}%`, // 72K is the max (New York)
+                  bgcolor: '#1a1a1a',
+                  borderRadius: 2
+                }}
+              />
+            </Box>
+          </Box>
+        ))}
+      </Stack>
+    </Box>
   );
 }
 
@@ -343,7 +396,12 @@ function SalesDonutChart({ height }) {
   ];
 
   return (
-    <Card sx={{ borderRadius: 2, border: '1px solid', borderColor: alpha(theme.palette.grey[300], 0.5) }}>
+    <Card sx={{
+      borderRadius: 2,
+      border: '1px solid',
+      borderColor: alpha(theme.palette.grey[300], 0.5),
+      bgcolor: theme.palette.background.card
+    }}>
       <CardHeader
         title="Total Sales"
         titleTypographyProps={{
@@ -385,8 +443,8 @@ export default function TargetDashboardView() {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const isTablet = useMediaQuery(theme.breakpoints.down('md'));
 
-  // Get theme-aware metrics data
-  const metricsData = getMetricsData(theme);
+  // Get metrics data
+  const metricsData = getMetricsData();
 
   // Responsive chart heights - reduced for better fit
   const projectionsHeight = isMobile ? 160 : isTablet ? 180 : 190;
@@ -397,8 +455,9 @@ export default function TargetDashboardView() {
     chart: {
       type: 'bar',
       toolbar: { show: false },
+      stacked: true,
     },
-    colors: [theme.palette.primary.main],
+    colors: ['#A8C5DA', alpha('#A8C5DA', 0.5)],
     plotOptions: {
       bar: {
         borderRadius: 4,
@@ -434,6 +493,25 @@ export default function TargetDashboardView() {
     grid: {
       borderColor: theme.palette.divider,
       strokeDashArray: 0,
+    },
+    legend: {
+      show: false,
+    },
+    tooltip: {
+      theme: theme.palette.mode,
+      style: {
+        fontSize: '12px',
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        formatter: (value) => `${value}M`,
+      },
+      fillSeriesColor: false,
+      marker: {
+        show: true,
+      },
     },
   });
 
@@ -488,6 +566,22 @@ export default function TargetDashboardView() {
         radius: 0,
       },
     },
+    tooltip: {
+      theme: theme.palette.mode,
+      style: {
+        fontSize: '12px',
+      },
+      x: {
+        show: true,
+      },
+      y: {
+        formatter: (value) => `$${(value / 1000).toFixed(0)}K`,
+      },
+      fillSeriesColor: false,
+      marker: {
+        show: true,
+      },
+    },
   });
 
   return (
@@ -521,7 +615,7 @@ export default function TargetDashboardView() {
             borderRadius: 3,
             border: '1px solid',
             borderColor: alpha(theme.palette.grey[300], 0.5),
-            bgcolor: theme.palette.background.paper,
+            bgcolor: theme.palette.background.card,
             boxShadow: 'none',
             display: 'flex',
             flexDirection: 'column'
@@ -545,8 +639,12 @@ export default function TargetDashboardView() {
                   type="bar"
                   series={[
                     {
-                      name: 'Amount',
-                      data: [20, 25, 15, 30, 18, 22],
+                      name: 'Actuals',
+                      data: [15, 18, 12, 20, 14, 16],
+                    },
+                    {
+                      name: 'Projections',
+                      data: [5, 7, 3, 10, 4, 6],
                     },
                   ]}
                   options={projectionsChartOptions}
@@ -562,7 +660,12 @@ export default function TargetDashboardView() {
       <Grid container spacing={2.5} sx={{ mb: 3 }}>
         {/* Revenue Chart */}
         <Grid xs={12} md={8} lg={9}>
-          <Card sx={{ borderRadius: 2, border: '1px solid', borderColor: alpha(theme.palette.grey[300], 0.5) }}>
+          <Card sx={{
+            borderRadius: 2,
+            border: '1px solid',
+            borderColor: alpha(theme.palette.grey[300], 0.5),
+            bgcolor: theme.palette.background.card
+          }}>
             <CardHeader
               title="Revenue"
               subheader={
@@ -618,7 +721,12 @@ export default function TargetDashboardView() {
       <Grid container spacing={2.5}>
         {/* Top Selling Products */}
         <Grid xs={12} md={8} lg={9}>
-          <Card sx={{ borderRadius: 2, border: '1px solid', borderColor: alpha(theme.palette.grey[300], 0.5) }}>
+          <Card sx={{
+            borderRadius: 2,
+            border: '1px solid',
+            borderColor: alpha(theme.palette.grey[300], 0.5),
+            bgcolor: theme.palette.background.card
+          }}>
             <CardHeader
               title="Top Selling Products"
               titleTypographyProps={{
@@ -629,7 +737,12 @@ export default function TargetDashboardView() {
               sx={{ pb: 2 }}
             />
             <CardContent sx={{ pt: 0 }}>
-              <TableContainer component={Paper} elevation={0} sx={{ border: 'none', overflowX: 'auto' }}>
+              <TableContainer component={Paper} elevation={0} sx={{
+                border: 'none',
+                overflowX: 'auto',
+                bgcolor: 'transparent',
+                backgroundImage: 'none'
+              }}>
                 <Table sx={{ minWidth: { xs: 500, sm: 'auto' } }}>
                   <TableHead>
                     <TableRow>

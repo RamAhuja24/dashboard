@@ -186,10 +186,10 @@ export default function Header({ onOpenNav, ...other }) {
       sx={{
         height: HEADER.H_MOBILE,
         zIndex: theme.zIndex.appBar + 1,
-        backgroundColor: theme.palette.background.paper,
+        backgroundColor: theme.palette.background.card,
         color: theme.palette.text.primary,
-        borderBottom: `1px solid ${theme.palette.divider}`,
-        boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1)',
+        borderBottom: `1px solid ${alpha(theme.palette.grey[300], 0.5)}`,
+        boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none',
         width: {
           xs: '100%',
           lg: `calc(100% - ${NAV.W_VERTICAL + 1}px)`
