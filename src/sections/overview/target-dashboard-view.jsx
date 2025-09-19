@@ -334,8 +334,8 @@ function WorldMapWidget() {
               <Box
                 sx={{
                   height: '100%',
-                  width: `${(location.value / 72) * 100}%`, // 72K is the max (New York)
-                  bgcolor: '#1a1a1a',
+                  width: `${location.value}%`, // Direct percentage out of 100
+                  background: theme.palette.background.progressBar,
                   borderRadius: 2
                 }}
               />
@@ -350,18 +350,30 @@ function WorldMapWidget() {
 function SalesDonutChart({ height }) {
   const theme = useTheme();
 
-  const chartColors = [
-    theme.palette.text.primary,
-    theme.palette.success.main,
-    theme.palette.warning.main,
-    theme.palette.info.main
-  ];
+  // Custom tooltip function
+  const createCustomTooltip = ({ series, seriesIndex, dataPointIndex, w }) => {
+    const total = series.reduce((a, b) => a + b, 0);
+    const value = series[seriesIndex];
+    const percent = ((value / total) * 100).toFixed(1);
+    const label = w.globals.labels[seriesIndex];
 
-  const chartOptions = useChart({
+    return `<div style="padding: 8px 12px; background: ${theme.palette.mode === 'dark' ? '#424242' : '#fff'}; border-radius: 4px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+      <div style="color: ${theme.palette.text.primary}; font-weight: 600; margin-bottom: 4px;">${label}</div>
+      <div style="color: ${theme.palette.text.secondary}; font-size: 12px;">${percent}%</div>
+    </div>`;
+  };
+
+  // Create chart options with dynamic colors
+  const chartOptions = {
     chart: {
       type: 'donut',
     },
-    colors: chartColors,
+    colors: [
+      theme.palette.donutChart.direct,  // Direct - conditional color
+      theme.palette.donutChart.affiliate,  // Affiliate
+      theme.palette.donutChart.sponsored,  // Sponsored
+      theme.palette.donutChart.email,      // E-mail
+    ],
     labels: ['Direct', 'Affiliate', 'Sponsored', 'E-mail'],
     legend: {
       show: false,
@@ -371,14 +383,7 @@ function SalesDonutChart({ height }) {
         donut: {
           size: '70%',
           labels: {
-            show: true,
-            total: {
-              show: true,
-              label: '38.6%',
-              fontSize: '24px',
-              fontWeight: 'bold',
-              color: theme.palette.text.primary,
-            },
+            show: false,
           },
         },
       },
@@ -386,7 +391,20 @@ function SalesDonutChart({ height }) {
     dataLabels: {
       enabled: false,
     },
-  });
+    stroke: {
+      width: 0,
+    },
+    tooltip: {
+      theme: theme.palette.mode,
+      style: {
+        fontSize: '12px',
+      },
+      custom: createCustomTooltip,
+    },
+  };
+
+  // Get chart colors for legend
+  const chartColors = chartOptions.colors;
 
   const salesData = [
     { label: 'Direct', value: '$300.56', color: chartColors[0] },
@@ -396,45 +414,84 @@ function SalesDonutChart({ height }) {
   ];
 
   return (
-    <Card sx={{
-      borderRadius: 2,
-      border: '1px solid',
-      borderColor: alpha(theme.palette.grey[300], 0.5),
-      bgcolor: theme.palette.background.card
+    <Box sx={{
+      bgcolor: theme.palette.background.card,
+      borderRadius: 3,
+      p: 3,
+      height: '100%',
+      display: 'flex',
+      flexDirection: 'column',
+      border: theme.palette.mode === 'dark' ? `1px solid ${alpha(theme.palette.grey[700], 0.3)}` : 'none',
+      boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'
     }}>
-      <CardHeader
-        title="Total Sales"
-        titleTypographyProps={{
-          variant: 'h6',
+      {/* Title */}
+      <Typography
+        variant="h6"
+        sx={{
           fontWeight: 600,
-          fontSize: '1.125rem'
+          fontSize: '1rem',
+          color: theme.palette.text.primary,
+          mb: 3
         }}
-        sx={{ pb: 2 }}
-      />
-      <CardContent sx={{ pt: 0 }}>
+      >
+        Total Sales
+      </Typography>
+
+      {/* Chart */}
+      <Box sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        mb: 3,
+        minHeight: { xs: 140, sm: 160, md: 180 }
+      }}>
         <Chart
+          key={theme.palette.mode}
           type="donut"
           series={[300.56, 135.18, 154.02, 48.96]}
           options={chartOptions}
           height={height}
         />
-        <Stack spacing={1.5} sx={{ mt: 2 }}>
-          {salesData.map((item) => (
-            <Stack key={item.label} direction="row" justifyContent="space-between" alignItems="center">
-              <Stack direction="row" alignItems="center" spacing={1}>
-                <Box sx={{ width: 8, height: 8, borderRadius: '50%', bgcolor: item.color }} />
-                <Typography variant="body2" sx={{ fontSize: '0.875rem', color: 'text.primary' }}>
+      </Box>
+
+      {/* Legend */}
+      <Stack spacing={2} sx={{ flexGrow: 1 }}>
+        {salesData.map((item, index) => (
+          <Box key={item.label}>
+            <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+              <Stack direction="row" alignItems="center" spacing={1.5}>
+                <Box sx={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  bgcolor: item.color
+                }} />
+                <Typography
+                  variant="body2"
+                  sx={{
+                    fontSize: '0.875rem',
+                    color: theme.palette.text.primary,
+                    fontWeight: 500
+                  }}
+                >
                   {item.label}
                 </Typography>
               </Stack>
-              <Typography variant="body2" sx={{ fontSize: '0.875rem', fontWeight: 600, color: 'text.primary' }}>
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: '0.875rem',
+                  fontWeight: 600,
+                  color: theme.palette.text.primary
+                }}
+              >
                 {item.value}
               </Typography>
             </Stack>
-          ))}
-        </Stack>
-      </CardContent>
-    </Card>
+          </Box>
+        ))}
+      </Stack>
+    </Box>
   );
 }
 
