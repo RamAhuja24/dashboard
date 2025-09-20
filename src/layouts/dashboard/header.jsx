@@ -12,15 +12,17 @@ import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { Search, Notifications, LightMode, DarkMode, ViewModule, Star, StarBorder, HistoryRounded, Menu } from '@mui/icons-material';
+import { Search, Notifications, LightMode, DarkMode, Star, StarBorder, HistoryRounded, Menu, Close } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
+import { Modal, Fade } from '@mui/material';
 
 import { useSettingsContext } from 'src/components/settings';
 import { useFavorites } from 'src/contexts/favorites-context';
 import { paths } from 'src/routes/paths';
 import ExactNotificationsPanel from 'src/components/notifications/exact-notifications-panel';
 import ActivitiesPanel from 'src/components/activities/activities-panel';
+import ContactsPanel from 'src/components/contacts/contacts-panel';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/custom-breadcrumbs';
 
 import { NAV } from './config-layout';
@@ -32,6 +34,8 @@ export default function Header({ onOpenNav, ...other }) {
   const { toggleFavorite, isFavorite } = useFavorites();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [activitiesOpen, setActivitiesOpen] = useState(false);
+  const [contactsOpen, setContactsOpen] = useState(false);
+  const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
   // Responsive breakpoints
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -44,6 +48,10 @@ export default function Header({ onOpenNav, ...other }) {
 
   const handleActivitiesToggle = () => {
     setActivitiesOpen(!activitiesOpen);
+  };
+
+  const handleContactsToggle = () => {
+    setContactsOpen(!contactsOpen);
   };
 
   // Get current page info dynamically from paths configuration
@@ -105,21 +113,23 @@ export default function Header({ onOpenNav, ...other }) {
           flex: isMobile ? 'none' : '0 0 auto'
         }}
       >
-        {/* Sidebar toggle button */}
-        <IconButton
-          onClick={onOpenNav}
-          sx={{
-            p: { xs: 0.5, sm: 0.75 },
-            color: 'text.primary',
-            '&:hover': {
-              bgcolor: theme.palette.mode === 'dark'
-                ? alpha(theme.palette.common.white, 0.08)
-                : alpha(theme.palette.grey[500], 0.08),
-            }
-          }}
-        >
-          <ViewModule sx={{ fontSize: { xs: 18, sm: 20 } }} />
-        </IconButton>
+        {/* Sidebar toggle button - hidden on desktop */}
+        {!isDesktop && (
+          <IconButton
+            onClick={onOpenNav}
+            sx={{
+              p: { xs: 0.5, sm: 0.75 },
+              color: 'text.primary',
+              '&:hover': {
+                bgcolor: theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.common.white, 0.08)
+                  : alpha(theme.palette.grey[500], 0.08),
+              }
+            }}
+          >
+            <Menu sx={{ fontSize: { xs: 18, sm: 20 } }} />
+          </IconButton>
+        )}
 
         {/* Favorite star - hidden on mobile */}
         {!isMobile && currentPage && (
@@ -256,6 +266,7 @@ export default function Header({ onOpenNav, ...other }) {
         {/* Mobile search icon */}
         {isMobile && (
           <IconButton
+            onClick={() => setMobileSearchOpen(!mobileSearchOpen)}
             sx={{
               p: 1,
               color: 'text.primary',
@@ -335,17 +346,26 @@ export default function Header({ onOpenNav, ...other }) {
         </IconButton>
 
 
-        {/* Menu */}
-        <IconButton sx={{
-          p: 1,
-          color: 'text.primary',
-          '&:hover': {
-            bgcolor: theme.palette.mode === 'dark'
-              ? alpha(theme.palette.common.white, 0.08)
-              : alpha(theme.palette.grey[500], 0.08),
-          }
-        }}>
-          <Menu sx={{ fontSize: 20 }} />
+        {/* Contacts */}
+        <IconButton
+          onClick={handleContactsToggle}
+          sx={{
+            p: 1,
+            color: 'text.primary',
+            '&:hover': {
+              bgcolor: theme.palette.mode === 'dark'
+                ? alpha(theme.palette.common.white, 0.08)
+                : alpha(theme.palette.grey[500], 0.08),
+            }
+          }}
+        >
+          <Box
+            component="span"
+            className="material-icons"
+            sx={{ fontSize: 20, color: 'inherit' }}
+          >
+            contacts
+          </Box>
         </IconButton>
       </Stack>
 
@@ -358,55 +378,145 @@ export default function Header({ onOpenNav, ...other }) {
         open={activitiesOpen}
         onClose={() => setActivitiesOpen(false)}
       />
+
+      <ContactsPanel
+        open={contactsOpen}
+        onClose={() => setContactsOpen(false)}
+      />
     </>
   );
 
   return (
-    <AppBar
-      sx={{
-        height: { xs: 56, sm: 64 },
-        zIndex: theme.zIndex.appBar + 1,
-        backgroundColor: theme.palette.mode === 'dark'
-          ? theme.palette.background.paper
-          : theme.palette.background.default,
-        color: 'text.primary',
-        borderBottom: `1px solid ${
-          theme.palette.mode === 'dark'
-            ? alpha(theme.palette.common.white, 0.12)
-            : alpha(theme.palette.grey[300], 0.5)
-        }`,
-        boxShadow: theme.palette.mode === 'light'
-          ? '0 1px 3px rgba(0,0,0,0.05)'
-          : '0 1px 3px rgba(0,0,0,0.15)',
-        backdropFilter: 'blur(6px)',
-        width: {
-          xs: '100%',
-          lg: isDesktop ? `calc(100% - ${NAV.W_VERTICAL + 1}px)` : '100%'
-        },
-        left: {
-          xs: 0,
-          lg: isDesktop ? NAV.W_VERTICAL : 0
-        },
-        transition: theme.transitions.create(['width', 'left'], {
-          easing: theme.transitions.easing.sharp,
-          duration: theme.transitions.duration.leavingScreen,
-        }),
-      }}
-      {...other}
-    >
-      <Toolbar
+    <>
+      <AppBar
         sx={{
-          height: 1,
-          px: { xs: 1.5, sm: 2, md: 3 },
-          minHeight: { xs: 56, sm: 64 },
+          height: { xs: 56, sm: 64 },
+          zIndex: theme.zIndex.appBar + 1,
+          backgroundColor: theme.palette.mode === 'dark'
+            ? theme.palette.background.paper
+            : theme.palette.background.default,
+          color: 'text.primary',
+          borderBottom: `1px solid ${
+            theme.palette.mode === 'dark'
+              ? alpha(theme.palette.common.white, 0.12)
+              : alpha(theme.palette.grey[300], 0.5)
+          }`,
+          boxShadow: theme.palette.mode === 'light'
+            ? '0 1px 3px rgba(0,0,0,0.05)'
+            : '0 1px 3px rgba(0,0,0,0.15)',
+          backdropFilter: 'blur(6px)',
+          width: {
+            xs: '100%',
+            lg: isDesktop ? `calc(100% - ${NAV.W_VERTICAL + 1}px)` : '100%'
+          },
+          left: {
+            xs: 0,
+            lg: isDesktop ? NAV.W_VERTICAL : 0
+          },
+          transition: theme.transitions.create(['width', 'left'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.leavingScreen,
+          }),
+        }}
+        {...other}
+      >
+        <Toolbar
+          sx={{
+            height: 1,
+            px: { xs: 1.5, sm: 2, md: 3 },
+            minHeight: { xs: 56, sm: 64 },
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          {renderContent}
+        </Toolbar>
+      </AppBar>
+
+      {/* Mobile Search Modal */}
+      <Modal
+        open={mobileSearchOpen && isMobile}
+        onClose={() => setMobileSearchOpen(false)}
+        closeAfterTransition
+        sx={{
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
+          alignItems: 'flex-start',
+          justifyContent: 'center',
+          pt: { xs: 7, sm: 8 }, // Start below header
         }}
       >
-        {renderContent}
-      </Toolbar>
-    </AppBar>
+        <Fade in={mobileSearchOpen && isMobile}>
+          <Box
+            sx={{
+              width: '90%',
+              maxWidth: 400,
+              bgcolor: theme.palette.mode === 'dark'
+                ? theme.palette.background.paper
+                : theme.palette.background.default,
+              borderRadius: 2,
+              boxShadow: theme.palette.mode === 'light'
+                ? '0 4px 20px rgba(0,0,0,0.15)'
+                : '0 4px 20px rgba(0,0,0,0.3)',
+              p: 2,
+              outline: 'none',
+            }}
+          >
+            <TextField
+              placeholder="Search"
+              size="small"
+              fullWidth
+              autoFocus
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <Search sx={{
+                      color: 'text.secondary',
+                      fontSize: 18
+                    }} />
+                  </InputAdornment>
+                ),
+                endAdornment: (
+                  <InputAdornment position="end">
+                    <IconButton
+                      onClick={() => setMobileSearchOpen(false)}
+                      size="small"
+                      sx={{ color: 'text.secondary' }}
+                    >
+                      <Close sx={{ fontSize: 18 }} />
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+              sx={{
+                '& .MuiOutlinedInput-root': {
+                  bgcolor: theme.palette.mode === 'dark'
+                    ? alpha(theme.palette.common.white, 0.05)
+                    : alpha(theme.palette.grey[500], 0.08),
+                  borderRadius: 2,
+                  height: 40,
+                  fontSize: '0.875rem',
+                  '& fieldset': {
+                    borderColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.common.white, 0.15)
+                      : alpha(theme.palette.grey[500], 0.2),
+                  },
+                  '&:hover fieldset': {
+                    borderColor: theme.palette.mode === 'dark'
+                      ? alpha(theme.palette.common.white, 0.25)
+                      : alpha(theme.palette.grey[500], 0.3),
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: 'primary.main',
+                    borderWidth: 1,
+                  },
+                },
+              }}
+            />
+          </Box>
+        </Fade>
+      </Modal>
+    </>
   );
 }
 
