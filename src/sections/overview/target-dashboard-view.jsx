@@ -363,8 +363,8 @@ function SalesDonutChart({ height }) {
     </div>`;
   };
 
-  // Create chart options with dynamic colors
-  const chartOptions = {
+  // Create chart options with dynamic colors using useChart hook
+  const chartOptions = useChart({
     chart: {
       type: 'donut',
     },
@@ -401,7 +401,7 @@ function SalesDonutChart({ height }) {
       },
       custom: createCustomTooltip,
     },
-  };
+  });
 
   // Get chart colors for legend
   const chartColors = chartOptions.colors;
@@ -456,7 +456,7 @@ function SalesDonutChart({ height }) {
 
       {/* Legend */}
       <Stack spacing={2} sx={{ flexGrow: 1 }}>
-        {salesData.map((item, index) => (
+        {salesData.map((item) => (
           <Box key={item.label}>
             <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
               <Stack direction="row" alignItems="center" spacing={1.5}>
@@ -514,7 +514,7 @@ export default function TargetDashboardView() {
       toolbar: { show: false },
       stacked: true,
     },
-    colors: ['#A8C5DA', alpha('#A8C5DA', 0.5)],
+    colors: [theme.palette.custom.lightBlue, alpha(theme.palette.custom.lightBlue, 0.5)],
     plotOptions: {
       bar: {
         borderRadius: 4,
@@ -581,7 +581,7 @@ export default function TargetDashboardView() {
       width: 3,
       curve: 'smooth',
     },
-    colors: [theme.palette.text.primary, theme.palette.text.secondary],
+    colors: [theme.palette.donutChart.direct, theme.palette.custom.lightBlue],
     dataLabels: {
       enabled: false,
     },
@@ -728,13 +728,13 @@ export default function TargetDashboardView() {
               subheader={
                 <Stack direction="row" spacing={3} sx={{ mt: 1 }}>
                   <Stack direction="row" alignItems="center" spacing={1}>
-                    <Box sx={{ width: 12, height: 2, bgcolor: '#212B36', borderRadius: 1 }} />
+                    <Box sx={{ width: 12, height: 2, bgcolor: theme.palette.donutChart.direct, borderRadius: 1 }} />
                     <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                       Current Week $58,211
                     </Typography>
                   </Stack>
                   <Stack direction="row" alignItems="center" spacing={1}>
-                    <Box sx={{ width: 12, height: 2, bgcolor: '#919EAB', borderRadius: 1 }} />
+                    <Box sx={{ width: 12, height: 2, bgcolor: theme.palette.custom.lightBlue, borderRadius: 1 }} />
                     <Typography variant="caption" sx={{ fontSize: '0.75rem', color: 'text.secondary' }}>
                       Previous Week $68,768
                     </Typography>

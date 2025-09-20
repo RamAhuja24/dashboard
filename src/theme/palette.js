@@ -74,6 +74,10 @@ export const common = {
   white: '#FFFFFF',
 };
 
+export const custom = {
+  lightBlue: '#A8C5DA',
+};
+
 export const action = {
   hover: alpha(grey[500], 0.08),
   selected: alpha(grey[500], 0.16),
@@ -93,6 +97,7 @@ const base = {
   error,
   grey,
   common,
+  custom,
   divider: alpha(grey[500], 0.2),
   action,
 };
@@ -111,7 +116,7 @@ export function palette(mode) {
       default: '#FFFFFF',
       neutral: grey[100],
       card: '#F7F9FB',
-      progressBar: `linear-gradient(0deg, #A8C5DA, #A8C5DA),
+      progressBar: `linear-gradient(0deg, ${custom.lightBlue}, ${custom.lightBlue}),
                     linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
                     linear-gradient(0deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.4)),
                     linear-gradient(0deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2))`,
@@ -141,7 +146,7 @@ export function palette(mode) {
       default: grey[900],
       neutral: alpha(grey[500], 0.12),
       card: '#FFFFFF0D',
-      progressBar: `linear-gradient(0deg, #A8C5DA, #A8C5DA),
+      progressBar: `linear-gradient(0deg, ${custom.lightBlue}, ${custom.lightBlue}),
                     linear-gradient(0deg, rgba(28, 28, 28, 0.4), rgba(28, 28, 28, 0.4)),
                     linear-gradient(0deg, rgba(28, 28, 28, 0.4), rgba(28, 28, 28, 0.4)),
                     linear-gradient(0deg, rgba(28, 28, 28, 0.2), rgba(28, 28, 28, 0.2))`,
