@@ -6,9 +6,9 @@ import Link from '@mui/material/Link';
 import { alpha } from '@mui/material/styles';
 import ListItemButton from '@mui/material/ListItemButton';
 
-import { RouterLink } from 'src/routes/components';
+import { ExpandMore, ChevronRight } from '@mui/icons-material';
 
-import Iconify from 'src/components/iconify';
+import { RouterLink } from 'src/routes/components';
 
 const NavItem = forwardRef(
   ({ item, depth, open, active, externalLink, onClick, slotProps, ...other }, ref) => {
@@ -38,6 +38,13 @@ const NavItem = forwardRef(
             color: 'primary.main',
             fontWeight: 600,
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
+          }),
+          ...(item.disabled && {
+            color: 'text.disabled',
+            cursor: 'default',
+            '&:hover': {
+              bgcolor: 'transparent',
+            },
           }),
           ...(subItem && {
             typography: 'body2',
@@ -102,11 +109,11 @@ const NavItem = forwardRef(
         )}
 
         {!!item.children && (
-          <Iconify
-            width={16}
-            icon={open ? 'eva:arrow-ios-downward-fill' : 'eva:arrow-ios-forward-fill'}
-            sx={{ ml: 1, flexShrink: 0 }}
-          />
+          open ? (
+            <ExpandMore sx={{ ml: 1, flexShrink: 0, fontSize: 16 }} />
+          ) : (
+            <ChevronRight sx={{ ml: 1, flexShrink: 0, fontSize: 16 }} />
+          )
         )}
       </ListItemButton>
     );
@@ -120,6 +127,10 @@ const NavItem = forwardRef(
     }
 
     if (item.children) {
+      return renderContent;
+    }
+
+    if (item.disabled || item.path === '#') {
       return renderContent;
     }
 

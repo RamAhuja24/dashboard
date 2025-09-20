@@ -1,23 +1,19 @@
 // ----------------------------------------------------------------------
 
 const ROOTS = {
-  DASHBOARD: '/dashboard',
-  USER: '/user',
+  DASHBOARD: "/dashboard",
+  PAGES: "/pages",
 };
 
 // ----------------------------------------------------------------------
 
 export const paths = {
   // ROOT - redirects to dashboard default
-  root: '/dashboard/default',
-
-  // FAVORITES
-  overview: '/overview',
-  projects: '/projects',
+  root: "/dashboard/default",
 
   // DASHBOARD
   dashboard: {
-    root: ROOTS.DASHBOARD,
+    root: `${ROOTS.DASHBOARD}/default`,
     default: `${ROOTS.DASHBOARD}/default`,
     ecommerce: `${ROOTS.DASHBOARD}/ecommerce`,
     projects: `${ROOTS.DASHBOARD}/projects`,
@@ -25,21 +21,23 @@ export const paths = {
   },
 
   // PAGES
-  userProfile: '/user-profile',
-  user: {
-    root: ROOTS.USER,
-    overview: `${ROOTS.USER}/overview`,
-    projects: `${ROOTS.USER}/projects`,
-    campaigns: `${ROOTS.USER}/campaigns`,
-    documents: `${ROOTS.USER}/documents`,
-    followers: `${ROOTS.USER}/followers`,
+  pages: {
+    root: `${ROOTS.PAGES}/user/overview`,
+    user: {
+      root: `${ROOTS.PAGES}/user/overview`,
+      overview: `${ROOTS.PAGES}/user/overview`,
+      projects: `${ROOTS.PAGES}/user/projects`,
+      campaigns: `${ROOTS.PAGES}/user/campaigns`,
+      documents: `${ROOTS.PAGES}/user/documents`,
+      followers: `${ROOTS.PAGES}/user/followers`,
+    },
+    account: `${ROOTS.PAGES}/account`,
+    corporate: `${ROOTS.PAGES}/corporate`,
+    blog: `${ROOTS.PAGES}/blog`,
+    social: `${ROOTS.PAGES}/social`,
   },
-  account: '/account',
-  corporate: '/corporate',
-  blog: '/blog',
-  social: '/social',
 
   // ERROR PAGES
-  page404: '/404',
-  page500: '/500',
+  page404: "/404",
+  page500: "/500",
 };

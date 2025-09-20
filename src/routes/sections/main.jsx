@@ -1,5 +1,5 @@
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
 
@@ -32,17 +32,11 @@ export const mainRoutes = [
     ),
   },
   {
-    path: '/user-profile',
-    element: (
-      <DashboardLayout>
-        <Suspense fallback={<div>Loading...</div>}>
-          <div>User Profile - Coming Soon</div>
-        </Suspense>
-      </DashboardLayout>
-    ),
+    path: '/pages',
+    element: <Navigate to="/pages/user/overview" replace />,
   },
   {
-    path: '/user',
+    path: '/pages/user',
     element: (
       <DashboardLayout>
         <Suspense fallback={<div>Loading...</div>}>
@@ -51,6 +45,10 @@ export const mainRoutes = [
       </DashboardLayout>
     ),
     children: [
+      {
+        index: true,
+        element: <Navigate to="/pages/user/overview" replace />,
+      },
       {
         path: 'overview',
         element: <div>User Overview - Coming Soon</div>,
@@ -74,7 +72,7 @@ export const mainRoutes = [
     ],
   },
   {
-    path: '/account',
+    path: '/pages/account',
     element: (
       <DashboardLayout>
         <Suspense fallback={<div>Loading...</div>}>
@@ -84,7 +82,7 @@ export const mainRoutes = [
     ),
   },
   {
-    path: '/corporate',
+    path: '/pages/corporate',
     element: (
       <DashboardLayout>
         <Suspense fallback={<div>Loading...</div>}>
@@ -94,7 +92,7 @@ export const mainRoutes = [
     ),
   },
   {
-    path: '/blog',
+    path: '/pages/blog',
     element: (
       <DashboardLayout>
         <Suspense fallback={<div>Loading...</div>}>
@@ -104,7 +102,7 @@ export const mainRoutes = [
     ),
   },
   {
-    path: '/social',
+    path: '/pages/social',
     element: (
       <DashboardLayout>
         <Suspense fallback={<div>Loading...</div>}>

@@ -12,10 +12,13 @@ import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { Search, Notifications, LightMode, DarkMode, ViewModule, Star, HistoryRounded, Menu } from '@mui/icons-material';
+import { Search, Notifications, LightMode, DarkMode, ViewModule, Star, StarBorder, HistoryRounded, Menu } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { useLocation } from 'react-router-dom';
 
 import { useSettingsContext } from 'src/components/settings';
+import { useFavorites } from 'src/contexts/favorites-context';
+import { paths } from 'src/routes/paths';
 import ExactNotificationsPanel from 'src/components/notifications/exact-notifications-panel';
 import ActivitiesPanel from 'src/components/activities/activities-panel';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/custom-breadcrumbs';
@@ -25,6 +28,8 @@ import { NAV } from './config-layout';
 export default function Header({ onOpenNav, ...other }) {
   const theme = useTheme();
   const settings = useSettingsContext();
+  const location = useLocation();
+  const { toggleFavorite, isFavorite } = useFavorites();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [activitiesOpen, setActivitiesOpen] = useState(false);
 
@@ -39,6 +44,53 @@ export default function Header({ onOpenNav, ...other }) {
 
   const handleActivitiesToggle = () => {
     setActivitiesOpen(!activitiesOpen);
+  };
+
+  // Get current page info dynamically from paths configuration
+  const getCurrentPageInfo = () => {
+    const currentPath = location.pathname;
+
+    // Create a flat map of all paths with their titles and icons
+    const createPageMap = () => {
+      const pageMap = {};
+
+      // Dashboard paths
+      if (paths.dashboard) {
+        pageMap[paths.dashboard.default] = { title: 'Default Dashboard', path: paths.dashboard.default, icon: 'dashboard' };
+        pageMap[paths.dashboard.ecommerce] = { title: 'eCommerce Dashboard', path: paths.dashboard.ecommerce, icon: 'shopping_cart' };
+        pageMap[paths.dashboard.projects] = { title: 'Projects Dashboard', path: paths.dashboard.projects, icon: 'work_outline' };
+        pageMap[paths.dashboard.courses] = { title: 'Online Courses', path: paths.dashboard.courses, icon: 'menu_book' };
+      }
+
+      // Pages paths
+      if (paths.pages) {
+        if (paths.pages.user) {
+          pageMap[paths.pages.user.overview] = { title: 'User Overview', path: paths.pages.user.overview, icon: 'person' };
+          pageMap[paths.pages.user.projects] = { title: 'User Projects', path: paths.pages.user.projects, icon: 'folder' };
+          pageMap[paths.pages.user.campaigns] = { title: 'User Campaigns', path: paths.pages.user.campaigns, icon: 'campaign' };
+          pageMap[paths.pages.user.documents] = { title: 'User Documents', path: paths.pages.user.documents, icon: 'description' };
+          pageMap[paths.pages.user.followers] = { title: 'User Followers', path: paths.pages.user.followers, icon: 'people' };
+        }
+        pageMap[paths.pages.account] = { title: 'Account', path: paths.pages.account, icon: 'settings' };
+        pageMap[paths.pages.corporate] = { title: 'Corporate', path: paths.pages.corporate, icon: 'apartment' };
+        pageMap[paths.pages.blog] = { title: 'Blog', path: paths.pages.blog, icon: 'article' };
+        pageMap[paths.pages.social] = { title: 'Social', path: paths.pages.social, icon: 'chat_bubble_outline' };
+      }
+
+      return pageMap;
+    };
+
+    const pageMap = createPageMap();
+    return pageMap[currentPath] || null;
+  };
+
+  const currentPage = getCurrentPageInfo();
+  const isCurrentPageFavorited = currentPage ? isFavorite(currentPage.path) : false;
+
+  const handleFavoriteToggle = () => {
+    if (currentPage) {
+      toggleFavorite(currentPage);
+    }
   };
 
   const renderContent = (
@@ -69,18 +121,26 @@ export default function Header({ onOpenNav, ...other }) {
           <ViewModule sx={{ fontSize: { xs: 18, sm: 20 } }} />
         </IconButton>
 
-        {/* Star icon - hidden on mobile */}
-        {!isMobile && (
-          <IconButton sx={{
-            p: { xs: 0.5, sm: 0.75 },
-            color: 'text.primary',
-            '&:hover': {
-              bgcolor: theme.palette.mode === 'dark'
-                ? alpha(theme.palette.common.white, 0.08)
-                : alpha(theme.palette.grey[500], 0.08),
-            }
-          }}>
-            <Star sx={{ fontSize: { xs: 18, sm: 20 } }} />
+        {/* Favorite star - hidden on mobile */}
+        {!isMobile && currentPage && (
+          <IconButton
+            onClick={handleFavoriteToggle}
+            sx={{
+              p: { xs: 0.5, sm: 0.75 },
+              color: isCurrentPageFavorited ? 'warning.main' : 'text.primary',
+              '&:hover': {
+                bgcolor: theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.common.white, 0.08)
+                  : alpha(theme.palette.grey[500], 0.08),
+                color: 'warning.main',
+              }
+            }}
+          >
+            {isCurrentPageFavorited ? (
+              <Star sx={{ fontSize: { xs: 18, sm: 20 } }} />
+            ) : (
+              <StarBorder sx={{ fontSize: { xs: 18, sm: 20 } }} />
+            )}
           </IconButton>
         )}
 

@@ -1,8 +1,7 @@
 import { lazy, Suspense } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, Navigate } from 'react-router-dom';
 
 import DashboardLayout from 'src/layouts/dashboard';
-import { paths } from 'src/routes/paths';
 
 // ----------------------------------------------------------------------
 
@@ -22,6 +21,10 @@ export const dashboardRoutes = [
       </DashboardLayout>
     ),
     children: [
+      {
+        index: true,
+        element: <Navigate to="/dashboard/default" replace />,
+      },
       {
         path: 'default',
         element: <TargetDashboardView />,

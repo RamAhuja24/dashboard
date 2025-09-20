@@ -14,17 +14,20 @@ import Tabs from '@mui/material/Tabs';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { NavSectionVertical } from 'src/components/nav-section';
+import { useFavorites } from 'src/contexts/favorites-context';
 
 import { NAV } from './config-layout';
-import navConfig from './config-navigation';
+import getNavConfig from './config-navigation';
 
 
 export default function Nav({ openNav, onCloseNav }) {
   const [currentTab, setCurrentTab] = useState(0);
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('lg'));
+  const { favorites } = useFavorites();
+  const navConfig = getNavConfig(favorites);
 
-  const handleTabChange = (event, newValue) => {
+  const handleTabChange = (_, newValue) => {
     setCurrentTab(newValue);
   };
   const renderAccount = (
