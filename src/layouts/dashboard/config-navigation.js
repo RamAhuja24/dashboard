@@ -4,14 +4,14 @@ const navConfig = [
     items: [
       {
         title: 'Overview',
-        path: '/',
-        icon: 'dashboard',
+        path: '/overview',
+        icon: 'circle',
         active: false,
       },
       {
         title: 'Projects',
         path: '/projects',
-        icon: 'work',
+        icon: 'circle',
         active: false,
       },
     ],
@@ -34,13 +34,13 @@ const navConfig = [
       {
         title: 'Projects',
         path: '/dashboard/projects',
-        icon: 'work',
+        icon: 'work_outline',
         active: false,
       },
       {
         title: 'Online Courses',
         path: '/dashboard/courses',
-        icon: 'school',
+        icon: 'menu_book',
         active: false,
       },
     ],
@@ -51,7 +51,7 @@ const navConfig = [
       {
         title: 'User Profile',
         path: '/user-profile',
-        icon: 'person',
+        icon: 'badge',
         active: false,
         children: [
           { title: 'Overview', path: '/user/overview' },
@@ -64,13 +64,13 @@ const navConfig = [
       {
         title: 'Account',
         path: '/account',
-        icon: 'account_circle',
+        icon: 'settings',
         active: false,
       },
       {
         title: 'Corporate',
         path: '/corporate',
-        icon: 'business',
+        icon: 'apartment',
         active: false,
       },
       {
@@ -82,7 +82,7 @@ const navConfig = [
       {
         title: 'Social',
         path: '/social',
-        icon: 'share',
+        icon: 'chat_bubble_outline',
         active: false,
       },
     ],

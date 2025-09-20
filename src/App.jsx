@@ -1,27 +1,27 @@
+import { BrowserRouter } from 'react-router-dom';
+
 import ThemeProvider from 'src/theme';
 import { SettingsProvider } from 'src/components/settings';
-
-import DashboardLayout from 'src/layouts/dashboard';
-import TargetDashboardView from 'src/sections/overview/target-dashboard-view';
+import Router from 'src/routes/sections';
 
 function App() {
   return (
-    <SettingsProvider
-      defaultSettings={{
-        themeMode: 'light',
-        themeDirection: 'ltr',
-        themeContrast: 'default',
-        themeLayout: 'vertical',
-        themeColorPresets: 'default',
-        themeStretch: false,
-      }}
-    >
-      <ThemeProvider>
-        <DashboardLayout>
-          <TargetDashboardView />
-        </DashboardLayout>
-      </ThemeProvider>
-    </SettingsProvider>
+    <BrowserRouter>
+      <SettingsProvider
+        defaultSettings={{
+          themeMode: 'light',
+          themeDirection: 'ltr',
+          themeContrast: 'default',
+          themeLayout: 'vertical',
+          themeColorPresets: 'default',
+          themeStretch: false,
+        }}
+      >
+        <ThemeProvider>
+          <Router />
+        </ThemeProvider>
+      </SettingsProvider>
+    </BrowserRouter>
   )
 }
 

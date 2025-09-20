@@ -1,10 +1,11 @@
 import PropTypes from 'prop-types';
 import { forwardRef } from 'react';
+import { Link } from 'react-router-dom';
 
 const RouterLink = forwardRef(({ href, children, ...other }, ref) => (
-  <a ref={ref} href={href} {...other}>
+  <Link ref={ref} to={href} {...other}>
     {children}
-  </a>
+  </Link>
 ));
 
 RouterLink.propTypes = {

@@ -2,6 +2,7 @@ import PropTypes from 'prop-types';
 import { useState } from 'react';
 
 import Stack from '@mui/material/Stack';
+import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
 import { useTheme, alpha } from '@mui/material/styles';
@@ -11,11 +12,13 @@ import Badge from '@mui/material/Badge';
 import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
-import { Search, Notifications, LightMode, DarkMode, ViewModule, Star, HistoryRounded, Menu, Settings } from '@mui/icons-material';
+import { Search, Notifications, LightMode, DarkMode, ViewModule, Star, HistoryRounded, Menu } from '@mui/icons-material';
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 import { useSettingsContext } from 'src/components/settings';
 import ExactNotificationsPanel from 'src/components/notifications/exact-notifications-panel';
+import ActivitiesPanel from 'src/components/activities/activities-panel';
+import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/custom-breadcrumbs';
 
 import { NAV } from './config-layout';
 
@@ -23,6 +26,7 @@ export default function Header({ onOpenNav, ...other }) {
   const theme = useTheme();
   const settings = useSettingsContext();
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [activitiesOpen, setActivitiesOpen] = useState(false);
 
   // Responsive breakpoints
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
@@ -31,6 +35,10 @@ export default function Header({ onOpenNav, ...other }) {
 
   const handleNotificationsToggle = () => {
     setNotificationsOpen(!notificationsOpen);
+  };
+
+  const handleActivitiesToggle = () => {
+    setActivitiesOpen(!activitiesOpen);
   };
 
   const renderContent = (
@@ -76,61 +84,28 @@ export default function Header({ onOpenNav, ...other }) {
           </IconButton>
         )}
 
-        {/* Breadcrumbs - simplified on mobile */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
+        {/* Custom Breadcrumbs */}
+        <Box
           sx={{
             ml: { xs: 0.5, sm: 1 },
             display: { xs: 'flex', sm: 'flex' }
           }}
         >
-          {isMobile ? (
-            <Typography
-              variant="body2"
-              sx={{
-                color: 'text.primary',
-                fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                fontWeight: 600,
-              }}
-            >
-              Default
-            </Typography>
-          ) : (
-            <>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'text.secondary',
-                  fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                  fontWeight: 500,
-                }}
-              >
-                Dashboards
-              </Typography>
-              <Typography
-                sx={{
-                  color: 'text.secondary',
-                  fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                  mx: 0.5,
-                }}
-              >
-                /
-              </Typography>
-              <Typography
-                variant="body2"
-                sx={{
-                  color: 'text.primary',
-                  fontSize: { xs: '0.8rem', sm: '0.875rem' },
-                  fontWeight: 600,
-                }}
-              >
-                Default
-              </Typography>
-            </>
-          )}
-        </Stack>
+          <CustomBreadcrumbs
+            autoGenerate
+            separator="/"
+            sx={{
+              ...(isMobile && {
+                '& .MuiBreadcrumbs-li:not(:last-child)': {
+                  display: 'none',
+                },
+                '& .MuiBreadcrumbs-separator': {
+                  display: 'none',
+                }
+              })
+            }}
+          />
+        </Box>
       </Stack>
 
       {/* Center section with search - responsive */}
@@ -256,15 +231,17 @@ export default function Header({ onOpenNav, ...other }) {
 
         {/* History - hidden on mobile */}
         {!isMobile && (
-          <IconButton sx={{
-            p: 1,
-            color: 'text.primary',
-            '&:hover': {
-              bgcolor: theme.palette.mode === 'dark'
-                ? alpha(theme.palette.common.white, 0.08)
-                : alpha(theme.palette.grey[500], 0.08),
-            }
-          }}>
+          <IconButton
+            onClick={handleActivitiesToggle}
+            sx={{
+              p: 1,
+              color: 'text.primary',
+              '&:hover': {
+                bgcolor: theme.palette.mode === 'dark'
+                  ? alpha(theme.palette.common.white, 0.08)
+                  : alpha(theme.palette.grey[500], 0.08),
+              }
+            }}>
             <HistoryRounded sx={{ fontSize: 20 }} />
           </IconButton>
         )}
@@ -297,20 +274,6 @@ export default function Header({ onOpenNav, ...other }) {
           </Badge>
         </IconButton>
 
-        {/* Settings - hidden on small mobile */}
-        {!isMobile && (
-          <IconButton sx={{
-            p: 1,
-            color: 'text.primary',
-            '&:hover': {
-              bgcolor: theme.palette.mode === 'dark'
-                ? alpha(theme.palette.common.white, 0.08)
-                : alpha(theme.palette.grey[500], 0.08),
-            }
-          }}>
-            <Settings sx={{ fontSize: 20 }} />
-          </IconButton>
-        )}
 
         {/* Menu */}
         <IconButton sx={{
@@ -329,6 +292,11 @@ export default function Header({ onOpenNav, ...other }) {
       <ExactNotificationsPanel
         open={notificationsOpen}
         onClose={() => setNotificationsOpen(false)}
+      />
+
+      <ActivitiesPanel
+        open={activitiesOpen}
+        onClose={() => setActivitiesOpen(false)}
       />
     </>
   );

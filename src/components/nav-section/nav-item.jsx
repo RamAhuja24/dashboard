@@ -53,13 +53,25 @@ const NavItem = forwardRef(
         {...other}
       >
         <Box component="span" sx={{ width: 24, height: 24, mr: 2, display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <Box
-            component="span"
-            className="material-icons"
-            sx={{ fontSize: 20, color: 'inherit' }}
-          >
-            {item.icon}
-          </Box>
+          {item.icon === 'circle' ? (
+            <Box
+              sx={{
+                width: 6,
+                height: 6,
+                borderRadius: '50%',
+                bgcolor: 'currentColor',
+                opacity: 0.7,
+              }}
+            />
+          ) : (
+            <Box
+              component="span"
+              className="material-icons"
+              sx={{ fontSize: 20, color: 'inherit' }}
+            >
+              {item.icon}
+            </Box>
+          )}
         </Box>
 
         <Box component="span" sx={{ flexGrow: 1 }}>

@@ -110,6 +110,7 @@ export function palette(mode) {
       primary: grey[800],
       secondary: grey[600],
       disabled: grey[500],
+      breadcrumbInactive: alpha('#1C1C1C', 0.4),
     },
     background: {
       paper: '#FFFFFF',
@@ -140,6 +141,7 @@ export function palette(mode) {
       primary: '#FFFFFF',
       secondary: grey[500],
       disabled: grey[600],
+      breadcrumbInactive: alpha('#FFFFFF', 0.4),
     },
     background: {
       paper: grey[800],
