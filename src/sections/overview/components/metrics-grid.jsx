@@ -1,73 +1,155 @@
 import { memo } from 'react';
 import PropTypes from 'prop-types';
 import { useTheme } from '@mui/material/styles';
-import Grid from '@mui/material/Unstable_Grid2';
 import Box from '@mui/material/Box';
+import Card from '@mui/material/Card';
 import Typography from '@mui/material/Typography';
 
 const MetricCard = memo(({ title, value, change, isPositive }) => {
   const theme = useTheme();
 
   return (
-    <Box
+    <Card
       sx={{
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
+        bgcolor: theme.palette.background.card,
         padding: { xs: '10px', sm: '12px', md: '16px' },
         gap: '8px',
         width: '100%',
         minWidth: { xs: 'auto', sm: 180, md: 200 },
         height: '100%',
         minHeight: { xs: 70, sm: 85, md: 95 },
-        backgroundColor: theme.palette.background.card,
-        borderRadius: '16px',
-        border: 'none',
-        boxShadow: 'none',
+        borderRadius: 3,
+        boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none',
         flexGrow: 1,
       }}
     >
-      <Typography
-        variant="body2"
+      {/* Title */}
+      <Box
         sx={{
-          fontSize: { xs: '0.75rem', sm: '0.8125rem', md: '0.875rem' },
-          fontWeight: 500,
-          color: 'text.secondary',
-          lineHeight: 1.2,
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          padding: 0,
+          width: 154,
+          height: 20,
+          borderRadius: '8px',
         }}
       >
-        {title}
-      </Typography>
-
-      <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1, width: '100%' }}>
         <Typography
-          variant="h4"
           sx={{
-            fontSize: { xs: '1.25rem', sm: '1.5rem', md: '1.75rem' },
-            fontWeight: 700,
-            color: 'text.primary',
-            lineHeight: 1.2,
-            flex: 1,
-          }}
-        >
-          {value}
-        </Typography>
-
-        <Typography
-          variant="caption"
-          sx={{
-            fontSize: { xs: '0.6875rem', sm: '0.75rem' },
+            width: '100%',
+            height: 20,
+            fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+            fontStyle: 'normal',
             fontWeight: 600,
-            color: isPositive ? 'success.main' : 'error.main',
-            lineHeight: 1,
-            whiteSpace: 'nowrap',
+            fontSize: { xs: '11px', sm: '12px', md: '13px' },
+            lineHeight: '20px',
+            color: theme.palette.text.primary,
           }}
         >
-          {change}
+          {title}
         </Typography>
       </Box>
-    </Box>
+
+      {/* Content - Value and Change */}
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'row',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          alignContent: 'flex-start',
+          padding: 0,
+          gap: '8px',
+          width: '100%',
+          height: 36,
+          borderRadius: '8px',
+        }}
+      >
+        {/* Value */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'flex-start',
+            padding: 0,
+            width: { xs: '50px', sm: '58px', md: '62px' },
+            height: 36,
+            borderRadius: '8px',
+          }}
+        >
+          <Typography
+            sx={{
+              width: '100%',
+              height: 36,
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+              fontStyle: 'normal',
+              fontWeight: 600,
+              fontSize: { xs: '18px', sm: '20px', md: '22px' },
+              lineHeight: '36px',
+              color: theme.palette.text.primary,
+            }}
+          >
+            {value}
+          </Typography>
+        </Box>
+
+        {/* Change with Icon */}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'row',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            alignContent: 'flex-start',
+            padding: 0,
+            gap: '4px',
+            width: { xs: '60px', sm: '62px', md: '64px' },
+            height: 18,
+            borderRadius: '8px',
+          }}
+        >
+          <Typography
+            sx={{
+              width: { xs: '40px', sm: '42px', md: '44px' },
+              height: 18,
+              fontFamily: 'Inter, -apple-system, BlinkMacSystemFont, sans-serif',
+              fontStyle: 'normal',
+              fontWeight: 400,
+              fontSize: { xs: '11px', sm: '11px', md: '12px' },
+              lineHeight: '18px',
+              color: theme.palette.text.primary,
+            }}
+          >
+            {change}
+          </Typography>
+          <Box
+            className="material-icons"
+            sx={{
+              display: 'flex',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              padding: 0,
+              width: 16,
+              height: 16,
+              borderRadius: '8px',
+              fontSize: { xs: 14, sm: 15, md: 16 },
+              color: theme.palette.text.primary,
+            }}
+          >
+            {isPositive ? 'trending_up' : 'trending_down'}
+          </Box>
+        </Box>
+      </Box>
+    </Card>
   );
 });
 
@@ -79,13 +161,17 @@ MetricCard.propTypes = {
 };
 
 const MetricsGrid = memo(({ metricsData }) => (
-  <Grid container spacing={{ xs: 1.5, sm: 2, md: 3 }}>
+  <Box sx={{
+    display: 'grid',
+    gridTemplateColumns: { xs: '1fr', sm: '1fr 1fr' },
+    gridTemplateRows: { xs: 'repeat(4, 1fr)', sm: 'repeat(2, 1fr)' },
+    gap: 1.5,
+    height: '100%'
+  }}>
     {metricsData.map((metric) => (
-      <Grid key={metric.title} xs={6} sm={3}>
-        <MetricCard {...metric} />
-      </Grid>
+      <MetricCard key={metric.title} {...metric} />
     ))}
-  </Grid>
+  </Box>
 ));
 
 MetricsGrid.propTypes = {

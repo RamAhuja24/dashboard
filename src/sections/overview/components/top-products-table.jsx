@@ -38,10 +38,9 @@ const TopProductsTable = memo(({ products }) => {
   return (
     <Card
       sx={{
-        borderRadius: 2,
-        border: '1px solid',
-        borderColor: alpha(theme.palette.grey[300], 0.5),
-        bgcolor: 'background.card'
+        borderRadius: 3,
+        bgcolor: theme.palette.background.card,
+        boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none'
       }}
     >
       <CardHeader

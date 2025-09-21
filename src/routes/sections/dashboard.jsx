@@ -7,6 +7,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 
 // DASHBOARD VIEWS
 const TargetDashboardView = lazy(() => import('src/sections/overview/target-dashboard-view'));
+const DashboardView = lazy(() => import('src/sections/overview/dashboard-view'));
 
 // ----------------------------------------------------------------------
 
@@ -27,7 +28,7 @@ export const dashboardRoutes = [
       },
       {
         path: 'default',
-        element: <TargetDashboardView />,
+        element: <DashboardView />,
       },
       {
         path: 'ecommerce',
