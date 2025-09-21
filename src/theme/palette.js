@@ -136,6 +136,15 @@ export function palette(mode) {
       ...base.action,
       active: grey[600],
     },
+    table: {
+      header: alpha("#F9FAFB", 0.5),
+      hover: alpha("#F9FAFB", 0.5),
+      pagination: alpha("#F9FAFB", 0.3),
+      avatar: {
+        background: "#DFE3E8",
+        color: "#212B36",
+      },
+    },
   };
 
   const dark = {
@@ -170,6 +179,15 @@ export function palette(mode) {
     action: {
       ...base.action,
       active: grey[500],
+    },
+    table: {
+      header: alpha("#212B36", 0.5),
+      hover: alpha("#454F5B", 0.5),
+      pagination: alpha("#212B36", 0.3),
+      avatar: {
+        background: "#2196F3",
+        color: "#FFFFFF",
+      },
     },
   };
 

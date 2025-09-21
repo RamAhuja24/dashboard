@@ -10,7 +10,7 @@ import {
   Chip,
 } from '@mui/material';
 import { CalendarToday } from '@mui/icons-material';
-import { alpha, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 const OrdersTableRow = memo(({
   order,
@@ -25,7 +25,7 @@ const OrdersTableRow = memo(({
       selected={isSelected}
       sx={{
         '&:hover': {
-          bgcolor: alpha(theme.palette.grey[50], 0.5),
+          bgcolor: theme.palette.table.hover,
         },
         borderBottom: '1px solid',
         borderColor: 'divider',
@@ -71,8 +71,12 @@ const OrdersTableRow = memo(({
               width: 32,
               height: 32,
               fontSize: '0.875rem',
-              bgcolor: order.user.name === 'Drew Cano' ? 'error.main' : 'grey.300',
-              color: order.user.name === 'Drew Cano' ? 'white' : 'text.primary'
+              bgcolor: order.user.name === 'Drew Cano'
+                ? 'error.main'
+                : theme.palette.table.avatar.background,
+              color: order.user.name === 'Drew Cano'
+                ? 'white'
+                : theme.palette.table.avatar.color
             }}
           >
             {order.user.name.split(' ').map(n => n[0]).join('')}

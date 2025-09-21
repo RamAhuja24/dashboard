@@ -17,7 +17,7 @@ import {
   MenuItem,
 } from '@mui/material';
 import { CalendarToday } from '@mui/icons-material';
-import { useTheme, alpha } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 
 // Import our new modular components
 import OrdersTableToolbar from './components/orders-table-toolbar';
@@ -82,7 +82,7 @@ const OrdersTableView = memo(() => {
   ];
 
   // Computed values
-  const hasActiveFilters = filters.status.length > 0 || filters.dateFrom || filters.dateTo || filters.amountMin || filters.amountMax;
+  const hasActiveFilters = filters.status.length > 0 || filters.dateFrom || filters.dateTo || (filters.amountMin && filters.amountMin.trim() !== '') || (filters.amountMax && filters.amountMax.trim() !== '');
 
   // Filter and search logic
   const filteredOrders = useMemo(() => {
@@ -435,12 +435,15 @@ const OrdersTableView = memo(() => {
         borderColor: 'divider',
         boxShadow: 'none',
         overflow: 'hidden',
+        bgcolor: 'background.paper',
       }}>
         {/* Table */}
         <TableContainer>
           <Table sx={{ minWidth: 650 }}>
             <TableHead>
-              <TableRow sx={{ bgcolor: alpha(theme.palette.grey[50], 0.5) }}>
+              <TableRow sx={{
+                bgcolor: theme.palette.table.header
+              }}>
                 <TableCell
                   padding="checkbox"
                   sx={{
@@ -519,7 +522,7 @@ const OrdersTableView = memo(() => {
             py: 2,
             borderTop: '1px solid',
             borderColor: 'divider',
-            bgcolor: alpha(theme.palette.grey[50], 0.3)
+            bgcolor: theme.palette.table.pagination
           }}
         >
           <Stack direction="row" alignItems="center" spacing={2}>
