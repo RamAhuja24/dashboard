@@ -25,8 +25,8 @@ import OrdersTableFilters from './components/orders-table-filters';
 import OrdersTableDialogs from './components/orders-table-dialogs';
 import OrdersTableRow from './components/orders-table-row';
 
-// Move mock data generation to separate utility
-import { generateMockOrders } from './utils/mock-data';
+// Import mock data from centralized location
+import { generateMockOrders } from 'src/assets/mock-data';
 
 const OrdersTableView = memo(() => {
   const theme = useTheme();
