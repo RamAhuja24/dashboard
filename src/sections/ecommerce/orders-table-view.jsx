@@ -409,6 +409,11 @@ const OrdersTableView = memo(() => {
       minHeight: '100vh',
       p: { xs: 1, sm: 2, md: 3 }
     }}>
+      {/* Page Title */}
+      <Typography variant="h5" sx={{ mb: 3, fontWeight: 600, fontSize: '1.25rem', color: 'text.primary' }}>
+        Orders List
+      </Typography>
+
       {/* Toolbar */}
       <OrdersTableToolbar
         searchQuery={searchQuery}
