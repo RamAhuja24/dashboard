@@ -29,11 +29,6 @@ const NavItem = memo(forwardRef(
           fontWeight: 500,
           color: 'text.secondary',
           fontSize: '0.875rem',
-          ...(active && {
-            color: 'primary.main',
-            fontWeight: 600,
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-          }),
           ...(item.disabled && {
             color: 'text.disabled',
             cursor: 'default',
@@ -46,6 +41,11 @@ const NavItem = memo(forwardRef(
             color: 'text.secondary',
             fontWeight: 500,
             fontSize: '0.8125rem',
+          }),
+          ...(active && {
+            color: 'primary.main',
+            fontWeight: 600,
+            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
           }),
           '&:hover': {
             bgcolor: (theme) => alpha(theme.palette.grey[500], 0.08),

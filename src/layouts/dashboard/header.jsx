@@ -71,6 +71,27 @@ const Header = memo(({ onOpenNav, ...other }) => {
         pageMap[paths.dashboard.courses] = { title: 'Online Courses', path: paths.dashboard.courses, icon: 'menu_book' };
       }
 
+      // eCommerce sub-pages
+      pageMap['/dashboard/ecommerce/overview'] = { title: 'Overview', path: '/dashboard/ecommerce/overview', icon: 'shopping_cart' };
+      pageMap['/dashboard/ecommerce/products'] = { title: 'Products', path: '/dashboard/ecommerce/products', icon: 'inventory' };
+      pageMap['/dashboard/ecommerce/orders'] = { title: 'Orders', path: '/dashboard/ecommerce/orders', icon: 'receipt' };
+      pageMap['/dashboard/ecommerce/customers'] = { title: 'Customers', path: '/dashboard/ecommerce/customers', icon: 'people' };
+      pageMap['/dashboard/ecommerce/analytics'] = { title: 'Analytics', path: '/dashboard/ecommerce/analytics', icon: 'analytics' };
+
+      // Projects sub-pages
+      pageMap['/dashboard/projects/overview'] = { title: 'Overview', path: '/dashboard/projects/overview', icon: 'work_outline' };
+      pageMap['/dashboard/projects/active'] = { title: 'Active', path: '/dashboard/projects/active', icon: 'play_circle' };
+      pageMap['/dashboard/projects/completed'] = { title: 'Completed', path: '/dashboard/projects/completed', icon: 'check_circle' };
+      pageMap['/dashboard/projects/team'] = { title: 'Team', path: '/dashboard/projects/team', icon: 'group' };
+      pageMap['/dashboard/projects/resources'] = { title: 'Resources', path: '/dashboard/projects/resources', icon: 'folder_shared' };
+
+      // Courses sub-pages
+      pageMap['/dashboard/courses/my-courses'] = { title: 'My Courses', path: '/dashboard/courses/my-courses', icon: 'school' };
+      pageMap['/dashboard/courses/catalog'] = { title: 'Catalog', path: '/dashboard/courses/catalog', icon: 'library_books' };
+      pageMap['/dashboard/courses/assignments'] = { title: 'Assignments', path: '/dashboard/courses/assignments', icon: 'assignment' };
+      pageMap['/dashboard/courses/progress'] = { title: 'Progress', path: '/dashboard/courses/progress', icon: 'trending_up' };
+      pageMap['/dashboard/courses/certificates'] = { title: 'Certificates', path: '/dashboard/courses/certificates', icon: 'verified' };
+
       // Pages paths
       if (paths.pages) {
         if (paths.pages.user) {
@@ -90,7 +111,29 @@ const Header = memo(({ onOpenNav, ...other }) => {
     };
 
     const pageMap = createPageMap();
-    return pageMap[currentPath] || null;
+
+    // If exact match found, return it
+    if (pageMap[currentPath]) {
+      return pageMap[currentPath];
+    }
+
+    // If no exact match, generate a generic page info for any valid path
+    if (currentPath && currentPath !== '/') {
+      const pathSegments = currentPath.split('/').filter(Boolean);
+      const lastSegment = pathSegments[pathSegments.length - 1];
+      const title = lastSegment
+        .split('-')
+        .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+        .join(' ');
+
+      return {
+        title: title,
+        path: currentPath,
+        icon: 'star_border' // Default icon for pages not explicitly mapped
+      };
+    }
+
+    return null;
   };
 
   const currentPage = getCurrentPageInfo();
@@ -105,15 +148,26 @@ const Header = memo(({ onOpenNav, ...other }) => {
   const renderContent = (
     <>
       {/* Left section with sidebar toggle and breadcrumbs */}
-      <Stack
-        direction="row"
-        alignItems="center"
-        spacing={{ xs: 0.5, sm: 1 }}
+      <Box
         sx={{
+          display: 'flex',
+          alignItems: 'center',
           minWidth: 0,
-          flex: isMobile ? 'none' : '0 0 auto'
+          flex: 1,
+          mr: 2, // Margin to separate from center section
+          overflow: 'hidden'
         }}
       >
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={{ xs: 0.5, sm: 1 }}
+          sx={{
+            minWidth: 0,
+            width: '100%',
+            overflow: 'hidden'
+          }}
+        >
         {/* Sidebar toggle button - hidden on desktop */}
         {!isDesktop && (
           <IconButton
@@ -121,6 +175,7 @@ const Header = memo(({ onOpenNav, ...other }) => {
             sx={{
               p: { xs: 0.5, sm: 0.75 },
               color: 'text.primary',
+              flexShrink: 0,
               '&:hover': {
                 bgcolor: theme.palette.mode === 'dark'
                   ? alpha(theme.palette.common.white, 0.08)
@@ -139,6 +194,7 @@ const Header = memo(({ onOpenNav, ...other }) => {
             sx={{
               p: { xs: 0.5, sm: 0.75 },
               color: isCurrentPageFavorited ? 'warning.main' : 'text.primary',
+              flexShrink: 0,
               '&:hover': {
                 bgcolor: theme.palette.mode === 'dark'
                   ? alpha(theme.palette.common.white, 0.08)
@@ -159,13 +215,30 @@ const Header = memo(({ onOpenNav, ...other }) => {
         <Box
           sx={{
             ml: { xs: 0.5, sm: 1 },
-            display: { xs: 'flex', sm: 'flex' }
+            minWidth: 0,
+            flex: 1,
+            overflow: 'hidden'
           }}
         >
           <CustomBreadcrumbs
             autoGenerate
             separator="/"
             sx={{
+              minWidth: 0,
+              overflow: 'hidden',
+              '& .MuiBreadcrumbs-ol': {
+                flexWrap: 'nowrap',
+                overflow: 'hidden'
+              },
+              '& .MuiBreadcrumbs-li': {
+                minWidth: 0,
+                overflow: 'hidden',
+                '& > *': {
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap'
+                }
+              },
               ...(isMobile && {
                 '& .MuiBreadcrumbs-li:not(:last-child)': {
                   display: 'none',
@@ -177,18 +250,19 @@ const Header = memo(({ onOpenNav, ...other }) => {
             }}
           />
         </Box>
-      </Stack>
+        </Stack>
+      </Box>
 
       {/* Center section with search - responsive */}
       {!isMobile && (
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="center"
+        <Box
           sx={{
-            flexGrow: 1,
-            maxWidth: { md: 300, lg: 400 },
-            mx: { md: 2, lg: 3 },
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            flexShrink: 0,
+            width: { md: 250, lg: 300 },
+            mx: 1,
           }}
         >
           <TextField
@@ -254,7 +328,7 @@ const Header = memo(({ onOpenNav, ...other }) => {
               },
             }}
           />
-        </Stack>
+        </Box>
       )}
 
       {/* Right section with controls - responsive */}
@@ -262,7 +336,11 @@ const Header = memo(({ onOpenNav, ...other }) => {
         direction="row"
         alignItems="center"
         spacing={{ xs: 0.25, sm: 0.5 }}
-        sx={{ flex: '0 0 auto' }}
+        sx={{
+          flex: '0 0 auto',
+          flexShrink: 0,
+          ml: 1
+        }}
       >
         {/* Mobile search icon */}
         {isMobile && (

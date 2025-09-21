@@ -4,7 +4,7 @@ const getFavoritesSection = (favorites = []) => ({
   items: favorites.length > 0 ? favorites.map(fav => ({
     title: fav.title,
     path: fav.path,
-    icon: fav.icon || 'circle',
+    icon: 'circle', // Always use circle for favorites to maintain bullet list style
   })) : [
     {
       title: 'No favorites yet',
