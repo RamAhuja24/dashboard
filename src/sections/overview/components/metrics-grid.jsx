@@ -8,6 +8,26 @@ import Typography from '@mui/material/Typography';
 const MetricCard = memo(({ title, value, change, isPositive }) => {
   const theme = useTheme();
 
+  // Custom background colors for specific metrics
+  const getCustomBackground = () => {
+    switch (title) {
+      case 'Customers':
+      case 'New Customers':
+        return '#E3F5FF'; // Custom blue for customers (both regular and ecommerce)
+      case 'Growth':
+      case 'Conversion Rate':
+        return '#E5ECF6'; // Custom purple for growth/conversion rate
+      default:
+        return theme.palette.background.card; // Default background
+    }
+  };
+
+  // Custom text color for metrics with custom backgrounds
+  const getCustomTextColor = () => {
+    const hasCustomBackground = ['Customers', 'New Customers', 'Growth', 'Conversion Rate'].includes(title);
+    return hasCustomBackground ? '#000000' : theme.palette.text.primary;
+  };
+
   return (
     <Card
       sx={{
@@ -15,7 +35,7 @@ const MetricCard = memo(({ title, value, change, isPositive }) => {
         flexDirection: 'column',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        bgcolor: theme.palette.background.card,
+        bgcolor: getCustomBackground(),
         padding: { xs: '10px', sm: '12px', md: '16px' },
         gap: '8px',
         width: '100%',
@@ -49,7 +69,7 @@ const MetricCard = memo(({ title, value, change, isPositive }) => {
             fontWeight: 600,
             fontSize: { xs: '11px', sm: '12px', md: '13px' },
             lineHeight: '20px',
-            color: theme.palette.text.primary,
+            color: getCustomTextColor(),
           }}
         >
           {title}
@@ -94,7 +114,7 @@ const MetricCard = memo(({ title, value, change, isPositive }) => {
               fontWeight: 600,
               fontSize: { xs: '18px', sm: '20px', md: '22px' },
               lineHeight: '36px',
-              color: theme.palette.text.primary,
+              color: getCustomTextColor(),
             }}
           >
             {value}
@@ -125,7 +145,7 @@ const MetricCard = memo(({ title, value, change, isPositive }) => {
               fontWeight: 400,
               fontSize: { xs: '11px', sm: '11px', md: '12px' },
               lineHeight: '18px',
-              color: theme.palette.text.primary,
+              color: getCustomTextColor(),
             }}
           >
             {change}
@@ -142,7 +162,7 @@ const MetricCard = memo(({ title, value, change, isPositive }) => {
               height: 16,
               borderRadius: '8px',
               fontSize: { xs: 14, sm: 15, md: 16 },
-              color: theme.palette.text.primary,
+              color: getCustomTextColor(),
             }}
           >
             {isPositive ? 'trending_up' : 'trending_down'}
