@@ -9,6 +9,7 @@ import DashboardLayout from 'src/layouts/dashboard';
 const TargetDashboardView = lazy(() => import('src/sections/overview/target-dashboard-view'));
 const DashboardView = lazy(() => import('src/sections/overview/dashboard-view'));
 const EcommerceDashboardView = lazy(() => import('src/sections/overview/ecommerce-dashboard-view'));
+const OrdersTableView = lazy(() => import('src/sections/ecommerce/orders-table-view'));
 
 // ----------------------------------------------------------------------
 
@@ -45,7 +46,7 @@ export const dashboardRoutes = [
       },
       {
         path: 'ecommerce/orders',
-        element: <div>eCommerce Orders - Coming Soon</div>,
+        element: <OrdersTableView />,
       },
       {
         path: 'ecommerce/customers',
