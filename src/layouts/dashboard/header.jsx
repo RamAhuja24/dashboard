@@ -393,9 +393,7 @@ const Header = memo(({ onOpenNav, ...other }) => {
         sx={{
           height: { xs: 56, sm: 64 },
           zIndex: theme.zIndex.appBar + 1,
-          backgroundColor: theme.palette.mode === 'dark'
-            ? theme.palette.background.paper
-            : theme.palette.background.default,
+          backgroundColor: theme.palette.background.header,
           color: 'text.primary',
           borderBottom: `1px solid ${
             theme.palette.mode === 'dark'

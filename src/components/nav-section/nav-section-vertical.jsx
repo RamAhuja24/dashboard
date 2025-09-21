@@ -9,7 +9,7 @@ import NavList from './nav-list';
 
 function NavSectionVertical({ data, slotProps, ...other }) {
   return (
-    <Stack component="nav" id="nav-section-vertical" {...other}>
+    <Stack component="nav" id="nav-section-vertical" sx={{ bgcolor: 'transparent' }} {...other}>
       {data.map((group, index) => (
         <Group
           key={group.subheader || index}
@@ -41,7 +41,7 @@ function Group({ subheader, items, slotProps }) {
   ));
 
   return (
-    <Stack sx={{ px: 2 }}>
+    <Stack sx={{ px: 2, bgcolor: 'transparent' }}>
       {subheader ? (
         <>
           <ListSubheader
@@ -54,6 +54,7 @@ function Group({ subheader, items, slotProps }) {
               typography: 'overline',
               display: 'inline-flex',
               color: 'text.disabled',
+              bgcolor: 'transparent',
               mb: `${slotProps?.gap || 4}px`,
               p: (theme) => theme.spacing(2, 1, 1, 1.5),
               transition: (theme) =>

@@ -3,7 +3,7 @@ import { useState, memo, useCallback } from 'react';
 
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
-import { alpha, useTheme } from '@mui/material/styles';
+import { useTheme } from '@mui/material/styles';
 import Typography from '@mui/material/Typography';
 import Divider from '@mui/material/Divider';
 import Tab from '@mui/material/Tab';
@@ -135,6 +135,7 @@ const Nav = memo(({ openNav, onCloseNav }) => {
       sx={{
         flexShrink: { lg: 0 },
         width: { lg: NAV.W_VERTICAL },
+        bgcolor: theme.palette.mode === 'dark' ? '#212B36' : '#F7F9FB',
       }}
     >
       <Drawer
@@ -147,10 +148,9 @@ const Nav = memo(({ openNav, onCloseNav }) => {
         PaperProps={{
           sx: {
             width: NAV.W_VERTICAL,
-            bgcolor: 'background.card',
-            borderRight: '1px solid',
-            borderColor: alpha(theme.palette.grey[300], 0.5),
-            boxShadow: theme.palette.mode === 'light' ? '0 1px 3px rgba(0,0,0,0.05)' : 'none',
+            bgcolor: theme.palette.mode === 'dark' ? '#212B36' : '#F7F9FB',
+            borderRight: 'none',
+            boxShadow: 'none',
           },
         }}
       >

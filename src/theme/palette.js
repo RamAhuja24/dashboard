@@ -117,6 +117,7 @@ export function palette(mode) {
       default: "#FFFFFF",
       neutral: grey[100],
       card: "#F7F9FB",
+      header: '#FFFFFF'
     },
     progressBar: {
       filled: custom.lightBlue,
@@ -151,10 +152,7 @@ export function palette(mode) {
       default: grey[900],
       neutral: alpha(grey[500], 0.12),
       card: "#FFFFFF0D",
-      progressBar: `linear-gradient(0deg, ${custom.lightBlue}, ${custom.lightBlue}),
-                    linear-gradient(0deg, rgba(28, 28, 28, 0.4), rgba(28, 28, 28, 0.4)),
-                    linear-gradient(0deg, rgba(28, 28, 28, 0.4), rgba(28, 28, 28, 0.4)),
-                    linear-gradient(0deg, rgba(28, 28, 28, 0.2), rgba(28, 28, 28, 0.2))`,
+      header: '#212B36'
     },
     progressBar: {
       filled: "#A8C5DA",

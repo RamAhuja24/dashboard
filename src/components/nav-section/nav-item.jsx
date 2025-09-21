@@ -34,11 +34,6 @@ const NavItem = memo(forwardRef(
             fontWeight: 600,
             bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
           }),
-          ...(item.active && {
-            color: 'primary.main',
-            fontWeight: 600,
-            bgcolor: (theme) => alpha(theme.palette.primary.main, 0.08),
-          }),
           ...(item.disabled && {
             color: 'text.disabled',
             cursor: 'default',
