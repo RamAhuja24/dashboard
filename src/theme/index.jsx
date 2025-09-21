@@ -4,7 +4,7 @@ import PropTypes from 'prop-types';
 import CssBaseline from '@mui/material/CssBaseline';
 import { createTheme, ThemeProvider as MuiThemeProvider } from '@mui/material/styles';
 
-import { useSettingsContext } from 'src/components/settings';
+import { useSettingsContext } from 'src/contexts';
 
 import { palette } from './palette';
 import { shadows } from './shadows';

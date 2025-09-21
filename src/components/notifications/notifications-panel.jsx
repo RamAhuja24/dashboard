@@ -1,136 +1,54 @@
-import { useState } from 'react';
 import PropTypes from 'prop-types';
 
-import {
-  Box,
-  Drawer,
-  Typography,
-  Stack,
-  Avatar,
-  Divider,
-  IconButton,
-  Badge,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  ListItemSecondaryAction,
-} from '@mui/material';
-import { Close, BugReport, PersonAdd, Code, Delete } from '@mui/icons-material';
+import Box from '@mui/material/Box';
+import Drawer from '@mui/material/Drawer';
+import Typography from '@mui/material/Typography';
+import Divider from '@mui/material/Divider';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import ListItemText from '@mui/material/ListItemText';
+import { alpha, useTheme } from '@mui/material/styles';
 
 const notifications = [
   {
     id: 1,
     title: 'You have a bug that needs...',
     time: 'Just now',
-    avatar: '/api/placeholder/32/32',
-    color: 'info',
-    icon: <BugReport />,
+    avatar: null,
+    type: 'bug',
+    color: '#00A76F',
   },
   {
     id: 2,
     title: 'New user registered',
     time: '59 minutes ago',
-    avatar: '/api/placeholder/32/32',
-    color: 'success',
-    icon: <PersonAdd />,
+    avatar: null,
+    type: 'user',
+    color: '#1890FF',
   },
   {
     id: 3,
     title: 'You have a bug that needs...',
     time: '12 hours ago',
-    avatar: '/api/placeholder/32/32',
-    color: 'info',
-    icon: <BugReport />,
+    avatar: null,
+    type: 'bug',
+    color: '#00A76F',
   },
   {
     id: 4,
     title: 'Andi Lane subscribed to you',
     time: 'Today, 11:59 AM',
-    avatar: '/api/placeholder/32/32',
-    color: 'primary',
-    icon: <PersonAdd />,
+    avatar: null,
+    type: 'subscribe',
+    color: '#7B61FF',
   },
 ];
 
-const activities = [
-  {
-    id: 1,
-    title: 'You have a bug that needs...',
-    time: '59 minutes ago',
-    avatar: '/api/placeholder/32/32',
-    icon: <BugReport />,
-  },
-  {
-    id: 2,
-    title: 'Released a new version',
-    time: '59 minutes ago',
-    avatar: '/api/placeholder/32/32',
-    icon: <Code />,
-  },
-  {
-    id: 3,
-    title: 'Submitted a bug',
-    time: '12 hours ago',
-    avatar: '/api/placeholder/32/32',
-    icon: <BugReport />,
-  },
-  {
-    id: 4,
-    title: 'Modified A data in Page X',
-    time: 'Today, 11:59 AM',
-    avatar: '/api/placeholder/32/32',
-    icon: <Code />,
-  },
-  {
-    id: 5,
-    title: 'Deleted a page in Project X',
-    time: 'Feb 2, 2023',
-    avatar: '/api/placeholder/32/32',
-    icon: <Delete />,
-  },
-];
-
-const contacts = [
-  {
-    id: 1,
-    name: 'Natali Craig',
-    avatar: '/api/placeholder/32/32',
-    online: true,
-  },
-  {
-    id: 2,
-    name: 'Drew Cano',
-    avatar: '/api/placeholder/32/32',
-    online: false,
-  },
-  {
-    id: 3,
-    name: 'Orlando Diggs',
-    avatar: '/api/placeholder/32/32',
-    online: true,
-  },
-  {
-    id: 4,
-    name: 'Andi Lane',
-    avatar: '/api/placeholder/32/32',
-    online: false,
-  },
-  {
-    id: 5,
-    name: 'Kate Morrison',
-    avatar: '/api/placeholder/32/32',
-    online: true,
-  },
-  {
-    id: 6,
-    name: 'Koray Okumus',
-    avatar: '/api/placeholder/32/32',
-    online: false,
-  },
-];
 
 export default function NotificationsPanel({ open, onClose }) {
+  const theme = useTheme();
+
   return (
     <Drawer
       anchor="right"
@@ -138,47 +56,74 @@ export default function NotificationsPanel({ open, onClose }) {
       onClose={onClose}
       PaperProps={{
         sx: {
-          width: 320,
+          width: { xs: '100vw', sm: 360 },
           bgcolor: 'background.default',
+          borderLeft: '1px solid',
+          borderColor: 'divider',
         },
       }}
     >
-      <Box sx={{ p: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography variant="h6" fontWeight="bold">
+      {/* Header */}
+      <Box sx={{ p: 3, pb: 2 }}>
+        <Typography variant="h6" sx={{ fontWeight: 600, fontSize: '1.125rem' }}>
           Notifications
         </Typography>
-        <IconButton size="small" onClick={onClose}>
-          <Close />
-        </IconButton>
       </Box>
 
       <Divider />
 
-      <Box sx={{ flex: 1, overflow: 'auto' }}>
-        {/* Notifications Section */}
-        <List>
+      {/* Notifications Section */}
+      <Box sx={{ px: 3, py: 2 }}>
+        <List disablePadding>
           {notifications.map((notification) => (
-            <ListItem key={notification.id}>
+            <ListItem key={notification.id} disablePadding sx={{ py: 1.5 }}>
               <ListItemAvatar>
-                <Badge
-                  color={notification.color}
-                  variant="dot"
-                  overlap="circular"
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                <Box
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    borderRadius: '50%',
+                    bgcolor: alpha(notification.color, 0.1),
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    position: 'relative',
+                  }}
                 >
-                  <Avatar sx={{ width: 32, height: 32 }}>
-                    {notification.icon}
-                  </Avatar>
-                </Badge>
+                  <Box
+                    className="material-icons"
+                    sx={{
+                      fontSize: 20,
+                      color: notification.color,
+                    }}
+                  >
+                    {notification.type === 'bug' ? 'bug_report' :
+                     notification.type === 'user' ? 'person_add' :
+                     notification.type === 'subscribe' ? 'person_add' : 'notifications'}
+                  </Box>
+                  {notification.id <= 2 && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        top: 2,
+                        right: 2,
+                        width: 8,
+                        height: 8,
+                        borderRadius: '50%',
+                        bgcolor: notification.color,
+                      }}
+                    />
+                  )}
+                </Box>
               </ListItemAvatar>
               <ListItemText
                 primary={
-                  <Typography variant="body2" fontWeight="medium">
+                  <Typography variant="body2" sx={{ fontWeight: 500, fontSize: '0.875rem', mb: 0.5 }}>
                     {notification.title}
                   </Typography>
                 }
                 secondary={
-                  <Typography variant="caption" color="text.secondary">
+                  <Typography variant="caption" sx={{ color: 'text.secondary', fontSize: '0.75rem' }}>
                     {notification.time}
                   </Typography>
                 }
@@ -186,75 +131,8 @@ export default function NotificationsPanel({ open, onClose }) {
             </ListItem>
           ))}
         </List>
-
-        <Divider sx={{ my: 1 }} />
-
-        {/* Activities Section */}
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-            Activities
-          </Typography>
-        </Box>
-
-        <List>
-          {activities.map((activity) => (
-            <ListItem key={activity.id}>
-              <ListItemAvatar>
-                <Avatar sx={{ width: 32, height: 32 }}>
-                  {activity.icon}
-                </Avatar>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body2" fontWeight="medium">
-                    {activity.title}
-                  </Typography>
-                }
-                secondary={
-                  <Typography variant="caption" color="text.secondary">
-                    {activity.time}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
-
-        <Divider sx={{ my: 1 }} />
-
-        {/* Contacts Section */}
-        <Box sx={{ p: 2 }}>
-          <Typography variant="subtitle2" fontWeight="bold" gutterBottom>
-            Contacts
-          </Typography>
-        </Box>
-
-        <List>
-          {contacts.map((contact) => (
-            <ListItem key={contact.id}>
-              <ListItemAvatar>
-                <Badge
-                  color={contact.online ? 'success' : 'default'}
-                  variant="dot"
-                  overlap="circular"
-                  anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-                >
-                  <Avatar sx={{ width: 32, height: 32 }}>
-                    {contact.name.charAt(0)}
-                  </Avatar>
-                </Badge>
-              </ListItemAvatar>
-              <ListItemText
-                primary={
-                  <Typography variant="body2" fontWeight="medium">
-                    {contact.name}
-                  </Typography>
-                }
-              />
-            </ListItem>
-          ))}
-        </List>
       </Box>
+
     </Drawer>
   );
 }

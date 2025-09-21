@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useState, useCallback, memo } from 'react';
 
 import Stack from '@mui/material/Stack';
 import Box from '@mui/material/Box';
@@ -13,46 +13,47 @@ import TextField from '@mui/material/TextField';
 import InputAdornment from '@mui/material/InputAdornment';
 
 import { Search, Notifications, LightMode, DarkMode, Star, StarBorder, HistoryRounded, Menu, Close } from '@mui/icons-material';
-import useMediaQuery from '@mui/material/useMediaQuery';
 import { useLocation } from 'react-router-dom';
 import { Modal, Fade } from '@mui/material';
 
-import { useSettingsContext } from 'src/components/settings';
-import { useFavorites } from 'src/contexts/favorites-context';
+import { useSettingsContext, useFavorites } from 'src/contexts';
 import { paths } from 'src/routes/paths';
-import ExactNotificationsPanel from 'src/components/notifications/exact-notifications-panel';
+import NotificationsPanel from '../../components/notifications';
 import ActivitiesPanel from 'src/components/activities/activities-panel';
 import ContactsPanel from 'src/components/contacts/contacts-panel';
 import CustomBreadcrumbs from 'src/components/custom-breadcrumbs/custom-breadcrumbs';
+import useResponsive from 'src/hooks/use-responsive';
 
 import { NAV } from './config-layout';
 
-export default function Header({ onOpenNav, ...other }) {
+const Header = memo(({ onOpenNav, ...other }) => {
   const theme = useTheme();
   const settings = useSettingsContext();
   const location = useLocation();
   const { toggleFavorite, isFavorite } = useFavorites();
+  const { isMobile, isTablet, isDesktop } = useResponsive();
+
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [activitiesOpen, setActivitiesOpen] = useState(false);
   const [contactsOpen, setContactsOpen] = useState(false);
   const [mobileSearchOpen, setMobileSearchOpen] = useState(false);
 
-  // Responsive breakpoints
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-  const isTablet = useMediaQuery(theme.breakpoints.down('lg'));
-  const isDesktop = useMediaQuery(theme.breakpoints.up('lg'));
+  // Memoized toggle handlers
+  const handleNotificationsToggle = useCallback(() => {
+    setNotificationsOpen(prev => !prev);
+  }, []);
 
-  const handleNotificationsToggle = () => {
-    setNotificationsOpen(!notificationsOpen);
-  };
+  const handleActivitiesToggle = useCallback(() => {
+    setActivitiesOpen(prev => !prev);
+  }, []);
 
-  const handleActivitiesToggle = () => {
-    setActivitiesOpen(!activitiesOpen);
-  };
+  const handleContactsToggle = useCallback(() => {
+    setContactsOpen(prev => !prev);
+  }, []);
 
-  const handleContactsToggle = () => {
-    setContactsOpen(!contactsOpen);
-  };
+  const handleThemeToggle = useCallback(() => {
+    settings.onUpdate('themeMode', settings.themeMode === 'dark' ? 'light' : 'dark');
+  }, [settings]);
 
   // Get current page info dynamically from paths configuration
   const getCurrentPageInfo = () => {
@@ -283,7 +284,7 @@ export default function Header({ onOpenNav, ...other }) {
 
         {/* Theme toggle */}
         <IconButton
-          onClick={() => settings.onUpdate('themeMode', settings.themeMode === 'dark' ? 'light' : 'dark')}
+          onClick={handleThemeToggle}
           sx={{
             p: 1,
             color: 'text.primary',
@@ -369,7 +370,7 @@ export default function Header({ onOpenNav, ...other }) {
         </IconButton>
       </Stack>
 
-      <ExactNotificationsPanel
+      <NotificationsPanel
         open={notificationsOpen}
         onClose={() => setNotificationsOpen(false)}
       />
@@ -518,8 +519,10 @@ export default function Header({ onOpenNav, ...other }) {
       </Modal>
     </>
   );
-}
+});
 
 Header.propTypes = {
   onOpenNav: PropTypes.func,
 };
+
+export default Header;

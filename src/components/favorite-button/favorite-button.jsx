@@ -1,7 +1,7 @@
 import { IconButton, Tooltip } from '@mui/material';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import { useFavorites } from 'src/contexts/favorites-context';
+import { useFavorites } from 'src/contexts';
 
 // ----------------------------------------------------------------------
 

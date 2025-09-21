@@ -1,8 +1,7 @@
 import { BrowserRouter } from 'react-router-dom';
 
 import ThemeProvider from 'src/theme';
-import { SettingsProvider } from 'src/components/settings';
-import { FavoritesProvider } from 'src/contexts/favorites-context';
+import { SettingsProvider, FavoritesProvider } from 'src/contexts';
 import Router from 'src/routes/sections';
 
 function App() {

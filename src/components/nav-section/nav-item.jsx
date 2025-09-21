@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { forwardRef } from 'react';
+import { forwardRef, memo } from 'react';
 
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -10,7 +10,7 @@ import { ExpandMore, ChevronRight } from '@mui/icons-material';
 
 import { RouterLink } from 'src/routes/components';
 
-const NavItem = forwardRef(
+const NavItem = memo(forwardRef(
   ({ item, depth, open, active, externalLink, onClick, slotProps, ...other }, ref) => {
     const subItem = depth !== 1;
 
@@ -140,7 +140,7 @@ const NavItem = forwardRef(
       </Link>
     );
   }
-);
+));
 
 NavItem.propTypes = {
   item: PropTypes.object,
